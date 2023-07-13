@@ -2,52 +2,45 @@
 using namespace std;
 
 int n;
-int arr[1004][3]; // 각 집마다 색깔 비용
-int dp[1004][3];
-
-int go(int x, int color,int prev_color) {
-	if (color == prev_color) {//이전집 색 확인하기
-		return 987654321;
+int dp[2][100001][2];
+int arr[2][100001];
+// 선택할지 말지로 바꿔야함
+int go(int y,int x,int flag) {
+	if (x >= n || y >= 2) {
+		return 0;
 	}
 
-	if (x==n-1) { //마지막 집일 경우
-		return arr[x][color]; // 그집의 비용을 return;
-	}
-	
 
-
-	int& ret = dp[x][color];
-	if (ret != 987654321) {
+	int& ret = dp[y][x];
+	if (ret != -1) {
 		return ret;
 	}
+	int check, nocheck = 0;
+	if (flag != 1) {
+		check = max(go(y, x + 1, 1), go(y + 1, x, 1)) + arr[y][x];
+	}
+	nocheck = max(go(y, x + 1, 0), go(y + 1, x, 0));
 
-	int r = go(x + 1, color,color);// 다음집 빨강
-	int g = go(x + 1, (color + 1) % 3,color); // 다음집 초록
-	int b = go(x + 1, (color + 2) % 3, color); // 다음집 파랑
-
-	ret = min(r, g);
-	ret = min(ret, b) + arr[x][color];
+	ret = max(check, nocheck);
 
 	return ret;
-
+	
 }
 
 int main() {
 	ios_base::sync_with_stdio(false);
-	cin.tie(NULL);
-	int cost;
-	cin >> n;
-	for (int i = 0; i < n; i++) {
-		for (int j = 0; j < 3; j++) {
-			cin >> arr[i][j];
-		}
-	}
-	fill(&dp[0][0], &dp[1003][3] , 987654321);
-	int r = go(0, 0,-1);// 색과 위치
-	int g = go(0, 1,-1);
-	int b = go(0, 2,-1);
-	cost = min(r, g);
-	cost = min(cost, b);
+	cin.tie(null);
 
-	cout << cost;
+	int t;
+	cin >> t;
+	while (t--) {
+		cin >> n;
+		for (int i = 0; i < 2; i++) {
+			for (int j = 0; j < n; j++) {
+				cin >> arr[i][j];
+			}
+		}
+		memset(dp, -1, sizeof(dp));
+		cout << go(0, 0, 0)<<'\n';
+	}
 }
