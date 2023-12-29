@@ -88,3 +88,7 @@
 16724
 1647
 1002
+
+---
+
+BOGGLE https://www.algospot.com/judge/problem/read/BOGGLE
