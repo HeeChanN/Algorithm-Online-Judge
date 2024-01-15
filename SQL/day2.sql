@@ -36,3 +36,10 @@ SELECT f.FACTORY_ID, f.FACTORY_NAME, f.ADDRESS
 from FOOD_FACTORY f
 where f.ADDRESS like '강원도%'
 order by f.FACTORY_ID
+
+# 6. 재구매가 일어난 상품과 회원 리스트 구하기
+SELECT o.USER_ID, o.PRODUCT_ID
+from ONLINE_SALE o
+group by o.USER_ID, o.PRODUCT_ID
+having count(user_id)>1
+order by o.USER_ID, o.PRODUCT_ID desc;
