@@ -1,0 +1,34 @@
+
+# 1. 모든 레코드 조회하기
+SELECT a.ANIMAL_ID, a.ANIMAL_TYPE, a.DATETIME, a.INTAKE_CONDITION, a.NAME, a.SEX_UPON_INTAKE
+FROM ANIMAL_INS a
+order by a.ANIMAL_ID;
+
+# 2. 오프라인/온라인 판매 데이터 통합하기
+SELECT DATE_FORMAT(o.SALES_DATE, "%Y-%m-%d") AS SALES_DATE, o.PRODUCT_ID, o.USER_ID,  o.SALES_AMOUNT
+from ONLINE_SALE o
+where o.SALES_DATE >= '2022-03-01' and o.SALES_DATE<="2022-03-31"
+
+UNION ALL
+
+SELECT DATE_FORMAT(os.SALES_DATE, '%Y-%m-%d') AS SALES_DATE, os.PRODUCT_ID, NULL as USER_ID ,os.SALES_AMOUNT
+from  OFFLINE_SALE os
+where os.SALES_DATE >= '2022-03-01' and os.SALES_DATE<="2022-03-31"
+order by SALES_DATE, PRODUCT_ID, USER_ID;
+
+# 3. 역순 정렬하기
+SELECT a.NAME, a.DATETIME
+from ANIMAL_INS a
+order by a.ANIMAL_ID desc
+
+# 4. 아픈 동물 찾기
+SELECT a.ANIMAL_ID, a.NAME
+from ANIMAL_INS a
+where a.INTAKE_CONDITION ='Sick'
+order by a.ANIMAL_ID
+
+# 5. 어린 동물 찾기
+SELECT a.ANIMAL_ID, a.NAME
+from ANIMAL_INS a
+where a.INTAKE_CONDITION !='Aged'
+order by a.ANIMAL_ID
