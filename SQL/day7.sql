@@ -1,41 +1,53 @@
 
-# 1. 동명 동물 수 찾기
-SELECT a.NAME, count(a.ANIMAL_ID) as COUNT
+# 1. 이름이 없는 동물의 아이디
+SELECT a.ANIMAL_ID
 from ANIMAL_INS a
-where a.NAME is not NULL
-group by a.NAME
-having COUNT > 1
+where a.NAME is null
 order by 1;
 
 
-# 2. 입양 시각 구하기(1)
-SELECT HOUR(o.DATETIME) as HOUR, count(o.ANIMAL_ID) as COUNT
-from ANIMAL_OUTS o
-where HOUR(DATETIME) between '9' and '19'
-group by HOUR
+# 2. 이름이 있는 동물의 아이디
+SELECT a.ANIMAL_ID
+from ANIMAL_INS a
+where a.NAME is not null
 order by 1;
 
-# 3. 입양 시각 구하기(2)
-SELECT num.HOUR, count(a.ANIMAL_ID) as COUNT
-from (
-   select ROW_NUMBER () OVER() - 1 as HOUR
-    from ANIMAL_OUTS o
-    limit 24
-) as num
-left outer join ANIMAL_OUTS a on
-    num.HOUR = HOUR(a.DATETIME)
-group by HOUR
-order by 1;
+# 3. NULL 처리하기
+SELECT  a.ANIMAL_TYPE, IFNULL(a.NAME, "No name"), a.SEX_UPON_INTAKE
+from ANIMAL_INS a
+order by a.ANIMAL_ID
 
 
-# 4. 가격대 별 상품 개수 구하기
-SELECT floor(p.PRICE / 10000) * 10000 as PRICE_GROUP, count(p.product_id) as PRODUCTS
-from product p
-group by PRICE_GROUP
-order by 1;
+# 4. 나이 정보가 없는 회원 수 구하기
+SELECT count(u.USER_ID)
+from USER_INFO u
+where u.AGE is null;
 
-# 5. 경기도에 위치한 식품창고 목록 출력하기
-SELECT f.WAREHOUSE_ID, f.WAREHOUSE_NAME, f.ADDRESS, IFNULL(f.FREEZER_YN,'N')
-from FOOD_WAREHOUSE f
-where f.ADDRESS like '경기도%'
-order by f.WAREHOUSE_ID
+# 5. 주문량이 많은 아이스크림들 조회하기
+SELECT j.FLAVOR
+from JULY j
+inner join (
+    select f.FLAVOR, sum(f.TOTAL_ORDER) as t
+    from FIRST_HALF f
+    group by f.FLAVOR
+) fa ON
+    j.FLAVOR = fa.FLAVOR
+group by flavor
+order by (sum(j.TOTAL_ORDER) + fa.t) desc
+limit 3
+
+# 6. 조건에 맞는 도서와 저자 리스트 출력하기
+SELECT b.BOOK_ID, a.AUTHOR_NAME, DATE_FORMAT(b.PUBLISHED_DATE,"%Y-%m-%d")
+from BOOK b
+inner join AUTHOR a on
+    b.AUTHOR_ID = a.AUTHOR_ID
+where b.CATEGORY = '경제'
+order by 3
+
+# 7. 있었는데요 없었습니다.
+SELECT i.ANIMAL_ID, i.NAME
+from ANIMAL_INS i
+inner join ANIMAL_OUTS o on
+    i.ANIMAL_ID = o.ANIMAL_ID
+where i.DATETIME > o.DATETIME
+order by i.DATETIME
