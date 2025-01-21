@@ -1,0 +1,41 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+int n;
+int score[16];
+int interval[16];
+int dp[16];
+
+int go(int i){
+    if(i >= n + 1){
+        if(i == n+1){
+            return 0;
+        }
+        else{
+            return -987654321;
+        }
+    }
+    int &ret = dp[i];
+    if(ret != 0){
+        return ret;
+    }
+
+    int yes = go(i+interval[i]) + score[i];
+    int no = go(i+1);
+    ret = max(yes,no);
+    return ret;
+}
+
+int main() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+    
+    cin >> n;
+    
+    for(int i = 1 ;i <=n;i++){
+        cin >> interval[i] >> score[i];
+    }
+    cout<<go(1);
+}
