@@ -1,0 +1,45 @@
+#include<bits/stdc++.h>
+
+using namespace std;
+
+vector<int> num;
+vector<char> op;
+
+string str;
+string a = "";
+
+int main(){
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+    
+    cin>> str;
+    
+    for(int i = 0; i<=str.length();i++){
+        if(i == str.length()){
+            num.push_back(stoi(a));
+            break;
+        }
+        if(str[i]<='9' && str[i]>='0'){
+            a = a+str[i];
+        }
+        else{
+            num.push_back(stoi(a));
+            a= "";
+            op.push_back(str[i]);
+        }
+    }
+    int pos = op.size()-1;
+    int ret = 0;
+    int sum = 0;
+    for(int i = num.size() -1; i>0; i--){
+        sum = sum + num[i];
+        if(op[pos] == '-'){
+            ret = ret - sum;
+            sum = 0;
+        }
+        pos--;
+    }
+    ret = ret + num[0] + sum;
+    cout <<ret;
+}
