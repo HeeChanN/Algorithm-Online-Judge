@@ -1,13 +1,6 @@
 import java.io.*;
 import java.util.*;
 
-public class Main {
-
-    static final int MAX_N = 401;
-    static final int OFFSET = 401;
-    static final int MAX_V = 802;
-    static final int INF = 1_000_000_000;
-
     static int N, P;
     static List<Integer>[] adj = new ArrayList[802];
     static int[][] capacity = new int[802][802];
